@@ -2,6 +2,7 @@ def commit_id
 pipeline {
     agent any
     stages {
+        
         stage('preparation') {
             steps {
                 checkout scm
@@ -11,6 +12,7 @@ pipeline {
                 }
             }
         }
+
         stage ('build') {
             steps {
                 echo 'building maven workload'
@@ -24,6 +26,17 @@ pipeline {
                 echo 'building docker image'
                 sh "docker build -t position-simulator:${commit_id} ."
                 echo 'docker image built'
+            }
+        }
+
+        stage ("Deploy") {
+            steps {
+                echo 'Deploying in k8s'
+                sh "sed -i -r 's|richardchesterwood/k8s-fleetman-position-simulator:release2|position-simulator:${commit_id}|' workloads.yaml"
+                sh "kubectl apply -f workloads.yaml"
+                sh "kubectl apply -f services.yaml"
+                sh "kubectl get all"
+                echo 'Deployment complete'
             }
         }
     }
