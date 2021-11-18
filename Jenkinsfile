@@ -28,7 +28,7 @@ pipeline {
             steps {
                 echo 'building maven workload'
                 sh "mvn clean install"
-                echo 'build complete'
+                echo 'maven build complete'
             }
         }
 
