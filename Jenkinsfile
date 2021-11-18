@@ -35,8 +35,8 @@ pipeline {
         stage ("image build") {
             steps {
                 echo 'building docker image'
-                sh "docker build -t khaledklai/position-simulator:${commit_id} ."
-                sh "docker push khaledklai/position-simulator:${commit_id} "
+                sh "docker build -t 192.168.0.38:8082/position-simulator:${commit_id} ."
+                sh "docker push 192.168.0.38:8082/position-simulator:${commit_id} "
                 echo 'docker image built'
             }
         }
@@ -44,7 +44,7 @@ pipeline {
         stage ("Deploy") {
             steps {
                 echo 'Deploying in k8s'
-                sh "sed -i -r 's|richardchesterwood/k8s-fleetman-position-simulator:release2|khaledklai/position-simulator:${commit_id}|' workloads.yaml"
+                sh "sed -i -r 's|richardchesterwood/k8s-fleetman-position-simulator:release2|192.168.0.38:8082/position-simulator:${commit_id}|' workloads.yaml"
                 sh "kubectl apply -f workloads.yaml"
                 sh "kubectl apply -f services.yaml"
                 sh "kubectl get all"
