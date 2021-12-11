@@ -43,7 +43,7 @@ pipeline {
 
         stage ("Deploy") {
             steps {
-                echo 'Deploying in k8s'
+                echo 'Deploying in kubernetes'
                 sh "sed -i -r 's|richardchesterwood/k8s-fleetman-position-simulator:release2|192.168.0.38:8082/position-simulator:${commit_id}|' workloads.yaml"
                 sh "kubectl apply -f workloads.yaml"
                 sh "kubectl apply -f services.yaml"
